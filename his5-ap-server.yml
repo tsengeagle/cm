@@ -1,0 +1,55 @@
+---
+
+- hosts: ap-server
+  become: yes
+  tasks: 
+  # install java
+  - name: copy java rpm to node
+    copy:
+      src: jre-8u151-linux-x64.rpm
+      dest: /tmp/jre.rpm
+
+  - name: install java
+    yum:
+      name: /tmp/jre.rpm
+      state: present
+  
+  - name: remove tmp file
+    file:
+      path: /tmp/jre.rpm
+      state: absent
+  # java done
+
+  # install tomcat
+  - name: add group tomcat
+    group:
+      name: tomcat
+
+  - name: add user tomcat
+    user:
+      name: tomcat
+      group: tomcat
+      home: /home/tomcat
+  
+  - name: create tomcat home
+    file:
+      path: /opt/apache-tomcat-8
+      state: directory
+
+  - name: untar tomcat to node
+    unarchive:
+      src: apache-tomcat-8.5.24.tar.gz
+      dest: /opt/apache-tomcat-8/
+      owner: tomcat
+      extra_opts: "--strip-components=1"
+
+  - name: assign owner to tomcat
+    file:
+      path: /opt/apache-tomcat-8
+      owner: tomcat
+      group: tomcat
+      state: directory
+      recurse: yes
+  # tomcat done
+
+    
