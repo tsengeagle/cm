@@ -52,4 +52,28 @@
       recurse: yes
   # tomcat done
 
-    
+  # configuration tomcat
+  - name: configuration tomcat server
+    template:
+      src: server.xml
+      dest: /opt/apache-tomcat-8/conf/
+    notify: restart tomcat
+
+  - name: configuration tomcat user
+    template:
+      src: tomcat-users.xml
+      dest: /opt/apache-tomcat-8/conf/
+    notify: restart tomcat
+
+  - name: install tomcat service
+    copy:
+      src: tomcat-service.sh
+      dest: /etc/init.d/tomcat
+      mode: 0775
+  # done tomcat configuration    
+  
+  - name: start tomcat
+    service:
+      name: tomcat
+      state: started
+      enabled: yes
