@@ -98,6 +98,7 @@
     wait_for: 
       port: 8080
 
+  # handle tomcat post install action
   handlers:
     - name: restart tomcat
       service:
