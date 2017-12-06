@@ -77,3 +77,15 @@
       name: tomcat
       state: started
       enabled: yes
+
+  - name: firewall open 8080 port
+    firewalld:
+      port: 8080/tcp
+      permanent: true
+      state: enabled
+      immediate: yes
+    when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+    
+  - name: ensure tomcat is started
+    wait_for: 
+      port: 8080
